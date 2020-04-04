@@ -215,6 +215,7 @@ export default function ({states, stateDistrictWiseData, regionHighlighted}) {
   useEffect(() => {
     const region = getRegionFromState(states[1]);
     setCurrentHoveredRegion(region);
+    setSelectedRegion(region.state);
   }, [states]);
 
   if (!currentHoveredRegion) {
@@ -285,7 +286,7 @@ export default function ({states, stateDistrictWiseData, regionHighlighted}) {
     if (regionHighlighted === undefined) {
       return;
     } else if (regionHighlighted === null) {
-      setSelectedRegion(null);
+      // setSelectedRegion(null);
       return;
     }
     const isState = !('district' in regionHighlighted);
@@ -337,6 +338,7 @@ export default function ({states, stateDistrictWiseData, regionHighlighted}) {
       setCurrentMap(newMap);
       if (newMap.mapType === MAP_TYPES.COUNTRY) {
         setHoveredRegion(states[1].state, newMap);
+        setSelectedRegion(states[1].state);
       } else if (newMap.mapType === MAP_TYPES.STATE) {
         const districtData = (stateDistrictWiseData[name] || {districtData: {}})
           .districtData;
@@ -346,6 +348,7 @@ export default function ({states, stateDistrictWiseData, regionHighlighted}) {
             return districtData[b].confirmed - districtData[a].confirmed;
           })[0];
         setHoveredRegion(topDistrict, newMap);
+        setSelectedRegion(topDistrict);
       }
     },
     [setHoveredRegion, stateDistrictWiseData, states]
@@ -460,6 +463,7 @@ export default function ({states, stateDistrictWiseData, regionHighlighted}) {
         setHoveredRegion={setHoveredRegion}
         changeMap={switchMapToState}
         selectedRegion={selectedRegion}
+        setSelectedRegion={setSelectedRegion}
       />
     </div>
   );
