@@ -15,6 +15,7 @@ import Links from './components/links';
 import FAQ from './components/faq';
 import Banner from './components/banner';
 import PatientDB from './components/patientdb';
+import Clusters from './components/clusters';
 import DeepDive from './components/deepdive';
 import Resources from './components/resources';
 /* import PatientDB from './components/patientdb';*/
@@ -36,28 +37,34 @@ function App() {
       animationDelayForNavbar: 0.3,
     },
     {
+      pageLink: '/clusters',
+      view: Clusters,
+      displayName: 'Clusters',
+      animationDelayForNavbar: 0.4,
+    },
+    {
       pageLink: '/deepdive',
       view: DeepDive,
       displayName: 'Deep Dive',
-      animationDelayForNavbar: 0.4,
+      animationDelayForNavbar: 0.5,
     },
     {
       pageLink: '/links',
       view: Links,
       displayName: 'Helpful Links',
-      animationDelayForNavbar: 0.4,
+      animationDelayForNavbar: 0.6,
     },
     {
       pageLink: '/faq',
       view: FAQ,
       displayName: 'About',
-      animationDelayForNavbar: 0.5,
+      animationDelayForNavbar: 0.7,
     },
     {
       pageLink: '/essentials',
       view: Resources,
       displayName: 'Essentials',
-      animationDelayForNavbar: 0.7,
+      animationDelayForNavbar: 0.8,
     },
   ];
 
