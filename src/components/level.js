@@ -19,7 +19,7 @@ function Level(props) {
       let active = 0;
       let recoveries = 0;
       let deaths = 0;
-      let deltas = {};
+      const d = {};
       data.forEach((state, index) => {
         if (index !== 0) {
           confirmed += parseInt(state.confirmed);
@@ -27,18 +27,18 @@ function Level(props) {
           recoveries += parseInt(state.recovered);
           deaths += parseInt(state.deaths);
         } else {
-          deltas = {
-            confirmed: parseInt(state.deltaconfirmed),
-            deaths: parseInt(state.deltadeaths),
-            recovered: parseInt(state.deltarecovered),
-          };
+          // d = {
+          //   confirmed: parseInt(state.deltaconfirmed),
+          //   deaths: parseInt(state.deltadeaths),
+          //   recovered: parseInt(state.deltarecovered),
+          // };
         }
       });
       setConfirmed(confirmed);
       setActive(active);
       setRecoveries(recoveries);
       setDeaths(deaths);
-      setDeltas(deltas);
+      setDeltas(d);
     };
     parseData();
   }, [data]);
