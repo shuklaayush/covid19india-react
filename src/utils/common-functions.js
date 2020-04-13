@@ -135,7 +135,11 @@ export const parseStateTimeseries = ({states_daily: data}) => {
     if (date.isBefore(today, 'Date')) {
       Object.entries(statewiseSeries).forEach(([k, v]) => {
         const stateCode = k.toLowerCase();
-        const prev = v[v.length - 1] || {};
+        const prev = v[v.length - 1] || {
+          totalconfirmed: 0,
+          totalrecovered: 0,
+          totaldeceased: 0,
+        };
         v.push({
           date: date.toDate(),
           dailyconfirmed: +data[i][stateCode] || 0,
