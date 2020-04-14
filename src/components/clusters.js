@@ -2,12 +2,54 @@ import axios from 'axios';
 import * as d3 from 'd3';
 import React, {useEffect, useRef, useState} from 'react';
 
+const stateCodeObj = {
+  AP: 'Andhra Pradesh',
+  AR: 'Arunachal Pradesh',
+  AS: 'Assam',
+  BR: 'Bihar',
+  CT: 'Chhattisgarh',
+  GA: 'Goa',
+  GJ: 'Gujarat',
+  HR: 'Haryana',
+  HP: 'Himachal Pradesh',
+  JH: 'Jharkhand',
+  KA: 'Karnataka',
+  KL: 'Kerala',
+  MP: 'Madhya Pradesh',
+  MH: 'Maharashtra',
+  MN: 'Manipur',
+  ML: 'Meghalaya',
+  MZ: 'Mizoram',
+  NL: 'Nagaland',
+  OR: 'Odisha',
+  PB: 'Punjab',
+  RJ: 'Rajasthan',
+  SK: 'Sikkim',
+  TN: 'Tamil Nadu',
+  TG: 'Telangana',
+  TR: 'Tripura',
+  UT: 'Uttarakhand',
+  UP: 'Uttar Pradesh',
+  WB: 'West Bengal',
+  AN: 'Andaman and Nicobar Islands',
+  CH: 'Chandigarh',
+  DB: 'Dadra and Nagar Haveli',
+  DD: 'Daman and Diu',
+  DL: 'Delhi',
+  JK: 'Jammu and Kashmir',
+  LA: 'Ladakh',
+  LD: 'Lakshadweep',
+  PY: 'Puducherry',
+};
+
 function Clusters(props) {
   const [fetched, setFetched] = useState(false);
+  const [rawData, setRawData] = useState([]);
   const [networkData, setNetworkData] = useState([]);
+  const [stateCode, setStateCode] = useState([]);
   const svgRef = useRef();
 
-  function prepareNetworkData(rawData) {
+  function prepareNetworkData(rawData, stateCode) {
     // Parse data
     let contractedStr = rawData.reduce(
       (acc, v) => acc + v.contractedfromwhichpatientsuspected + ', ',
@@ -21,24 +63,27 @@ function Clusters(props) {
     const nodesSet = new Set();
     const links = [];
     rawData.forEach((d) => {
-      const contractedStr = d.contractedfromwhichpatientsuspected.replace(
-        /\s+/g,
-        ''
-      );
-      const contracted = contractedStr.match(/[^,]+/g);
-      if (contracted) {
-        const pid = 'P' + d.patientnumber;
-        nodesSet.add(pid);
-        nodes.push({
-          id: pid,
-          group: sources.has(pid) ? 'source' : 'target',
-        });
-        contracted.forEach((p) => {
-          links.push({
-            source: p,
-            target: pid,
+      if (!stateCode || stateCode === d.statecode) {
+        const contractedStr = d.contractedfromwhichpatientsuspected.replace(
+          /\s+/g,
+          ''
+        );
+        const contracted = contractedStr.match(/[^,]+/g);
+        if (contracted) {
+          const pid = 'P' + d.patientnumber;
+          nodesSet.add(pid);
+          nodes.push({
+            id: pid,
+            group: sources.has(pid) ? 'source' : 'target',
+            raw: d,
           });
-        });
+          contracted.forEach((p) => {
+            links.push({
+              source: p,
+              target: pid,
+            });
+          });
+        }
       }
     });
 
@@ -48,6 +93,7 @@ function Clusters(props) {
         nodes.push({
           id: d.source,
           group: 'source',
+          raw: d.source,
         });
         nodesSet.add(d.source);
       }
@@ -64,7 +110,7 @@ function Clusters(props) {
         const rawDataResponse = await axios.get(
           'https://api.covid19india.org/raw_data.json'
         );
-        setNetworkData(prepareNetworkData(rawDataResponse.data.raw_data));
+        setRawData(rawDataResponse.data.raw_data);
         setFetched(true);
       } catch (err) {
         console.log(err);
@@ -74,6 +120,10 @@ function Clusters(props) {
       getData();
     }
   }, [fetched]);
+
+  useEffect(() => {
+    setNetworkData(prepareNetworkData(rawData, stateCode));
+  }, [rawData, stateCode]);
 
   const drag = (simulation) => {
     function dragstarted(d) {
@@ -103,6 +153,8 @@ function Clusters(props) {
   useEffect(() => {
     if (!fetched) return;
     const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
+
     const width = +svg.attr('width');
     const height = +svg.attr('height');
     svg.attr('viewBox', [-width / 2, -height / 2, width, height]);
@@ -162,7 +214,7 @@ function Clusters(props) {
       .attr('fill', (d) => colorScale(d.group))
       .call(drag(simulation));
 
-    node.append('title').text((d) => d.id);
+    node.append('title').text((d) => JSON.stringify(d.raw, null, 2));
 
     simulation.on('tick', () => {
       link
@@ -177,6 +229,23 @@ function Clusters(props) {
 
   return (
     <div className="Clusters">
+      <select
+        id="state"
+        onChange={(event) => {
+          setStateCode(event.target.value);
+        }}
+      >
+        <option value="" disabled selected>
+          Select State
+        </option>
+        {Object.keys(stateCodeObj).map((state, index) => {
+          return (
+            <option key={index} value={state}>
+              {state}
+            </option>
+          );
+        })}
+      </select>
       <svg id="clusters" width="1280" height="720" ref={svgRef}></svg>
     </div>
   );
