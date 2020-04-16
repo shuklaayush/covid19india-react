@@ -433,7 +433,7 @@ h6 {
       font-family: 'archia';
       font-size: 10px;
       background: $gray-light;
-      padding: 0.5rem;
+      padding: 0.25rem;
       border-radius: 5px;
       color: $gray;
       margin-right: 0.5rem;
@@ -511,8 +511,8 @@ h6 {
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
-  margin-left: 7rem;
-  margin-right: 7rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
 
   .resource-left,
   .resource-right {
@@ -911,7 +911,6 @@ h6 {
     height: 2rem;
     width: calc(100% - 4rem);
     box-shadow: 0 10px 35px rgba(0,0,0,.1);
-    -webkit-box-shadow: 0 10px 35px rgba(0,0,0,.1);
     border: 0;
     outline: none;
     padding: 1rem;
@@ -1232,7 +1231,6 @@ h6 {
   svg {
     width: 20px;
     stroke-width: 2px;
-    padding-right: 6px;
   }
 
   &.is-purple {
@@ -3591,8 +3589,7 @@ select {
     }
 
     .expand {
-      flex-direction: column;
-      width: 10rem;
+      flex-direction: row;
       left: 5rem;
       top: 0;
       background: $gray-light-opaque;
