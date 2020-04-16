@@ -35,6 +35,27 @@ function Minigraph({timeseries}) {
         .domain([0, d3.max(data, (d) => d.dailyconfirmed)])
         .range([height, 0]);
 
+      const y2 = d3
+        .scaleLinear()
+        .domain([
+          0,
+          d3.max(
+            data,
+            (d) => d.dailyconfirmed - d.dailyrecovered - d.dailydeceased
+          ),
+        ])
+        .range([height, 0]);
+
+      const y3 = d3
+        .scaleLinear()
+        .domain([0, d3.max(data, (d) => d.dailyrecovered)])
+        .range([height, 0]);
+
+      const y4 = d3
+        .scaleLinear()
+        .domain([0, d3.max(data, (d) => d.dailydeceased)])
+        .range([height, 0]);
+
       const path1 = svg1
         .append('path')
         .datum(data)
@@ -95,7 +116,7 @@ function Minigraph({timeseries}) {
           d3
             .line()
             .x((d) => x(d.date))
-            .y((d) => y1(d.dailyconfirmed - d.dailyrecovered - d.dailydeceased))
+            .y((d) => y2(d.dailyconfirmed - d.dailyrecovered - d.dailydeceased))
             .curve(d3.curveCardinal)
         );
 
@@ -119,7 +140,7 @@ function Minigraph({timeseries}) {
         .attr('cursor', 'pointer')
         .attr('cx', (d) => x(d.date))
         .attr('cy', (d) =>
-          y1(d.dailyconfirmed - d.dailyrecovered - d.dailydeceased)
+          y2(d.dailyconfirmed - d.dailyrecovered - d.dailydeceased)
         )
         .on('mouseover', (d) => {
           d3.select(d3.event.target).attr('r', '5');
@@ -145,11 +166,11 @@ function Minigraph({timeseries}) {
           d3
             .line()
             .x((d) => x(d.date))
-            .y((d) => y1(d.dailyrecovered))
+            .y((d) => y3(d.dailyrecovered))
             .curve(d3.curveCardinal)
         );
 
-      const totalLength3 = path1.node().getTotalLength();
+      const totalLength3 = path3.node().getTotalLength();
       path3
         .attr('stroke-dasharray', totalLength3 + ' ' + totalLength3)
         .attr('stroke-dashoffset', totalLength3)
@@ -168,7 +189,7 @@ function Minigraph({timeseries}) {
         .attr('r', 2)
         .attr('cursor', 'pointer')
         .attr('cx', (d) => x(d.date))
-        .attr('cy', (d) => y1(d.dailyrecovered))
+        .attr('cy', (d) => y3(d.dailyrecovered))
         .on('mouseover', (d) => {
           d3.select(d3.event.target).attr('r', '5');
         })
@@ -193,7 +214,7 @@ function Minigraph({timeseries}) {
           d3
             .line()
             .x((d) => x(d.date))
-            .y((d) => y1(d.dailydeceased))
+            .y((d) => y4(d.dailydeceased))
             .curve(d3.curveCardinal)
         );
 
@@ -216,7 +237,7 @@ function Minigraph({timeseries}) {
         .attr('r', 2)
         .attr('cursor', 'pointer')
         .attr('cx', (d) => x(d.date))
-        .attr('cy', (d) => y1(d.dailydeceased))
+        .attr('cy', (d) => y4(d.dailydeceased))
         .on('mouseover', (d) => {
           d3.select(d3.event.target).attr('r', '5');
         })
