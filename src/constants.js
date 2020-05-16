@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import {hi, te, gu, ta, bn} from 'date-fns/locale/';
 
 export const STATE_ROW_STATISTICS = [
@@ -30,6 +31,12 @@ export const MAP_VIEWS = {
   STATES: 0,
   DISTRICTS: 1,
 };
+
+// Survey of India Lambert Conic Conformal (LCC) projection
+export const MAP_PROJECTION = d3
+  .geoConicConformal()
+  .rotate([-80, 0])
+  .parallels([12.472944, 35.1728055]);
 
 export const MAPS_DIR =
   process.env.NODE_ENV === 'production' ? '/mini_maps' : '/maps';

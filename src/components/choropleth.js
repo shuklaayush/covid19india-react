@@ -1,6 +1,12 @@
 import MapLegend from './maplegend';
 
-import {MAP_META, MAP_STATISTICS, MAP_TYPES, MAP_VIEWS} from '../constants';
+import {
+  MAP_META,
+  MAP_PROJECTION,
+  MAP_STATISTICS,
+  MAP_TYPES,
+  MAP_VIEWS,
+} from '../constants';
 import {capitalizeAll} from '../utils/commonfunctions';
 
 import * as d3 from 'd3';
@@ -88,15 +94,14 @@ function ChoroplethMap({
     );
 
     const svg = d3.select(svgRef.current);
-
     if (!svg.attr('viewBox')) {
       const {
         width: widthDefault,
         height: heightDefault,
       } = svgRef.current.getBoundingClientRect();
       const projection = isCountryLoaded
-        ? d3.geoMercator().fitWidth(widthDefault, topology)
-        : d3.geoMercator().fitSize([widthDefault, heightDefault], topology);
+        ? MAP_PROJECTION.fitWidth(widthDefault, topology)
+        : MAP_PROJECTION.fitSize([widthDefault, heightDefault], topology);
       const path = d3.geoPath(projection);
       const bBox = path.bounds(topology);
       const [width, height] = [+bBox[1][0], bBox[1][1]];
@@ -105,7 +110,7 @@ function ChoroplethMap({
     const bBox = svg.attr('viewBox').split(' ');
     const [width, height] = [+bBox[2], +bBox[3]];
 
-    const projection = d3.geoMercator().fitSize([width, height], topology);
+    const projection = MAP_PROJECTION.fitSize([width, height], topology);
     const path = d3.geoPath(projection);
 
     // Add id to each feature
