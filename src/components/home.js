@@ -21,11 +21,10 @@ import {
 } from '../utils/commonfunctions';
 
 import axios from 'axios';
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 import * as Icon from 'react-feather';
 import {Helmet} from 'react-helmet';
 import {useEffectOnce, useLocalStorage} from 'react-use';
-import useSWR from 'swr';
 function Home(props) {
   const [states, setStates] = useState(null);
   const [stateDistrictWiseData, setStateDistrictWiseData] = useState(null);
@@ -71,6 +70,10 @@ function Home(props) {
   );
 
   useEffectOnce(() => {
+    getStates();
+  });
+
+  useEffectOnce(() => {
     axios
       .get('https://api.covid19india.org/updatelog/log.json')
       .then((response) => {
@@ -88,69 +91,55 @@ function Home(props) {
       });
   });
 
-  const {data} = useSWR(
-    'https://api.jsonbin.io/b/5ec1c0ba50c8594cd4f8b47b/latest',
-    async (url) => {
-      const {data: d} = await axios.get(url);
-      return d;
+  const getStates = async () => {
+    try {
+      const [
+        {data: statesDailyResponse},
+        {data: zonesResponse},
+      ] = await Promise.all([
+        axios.get('https://api.covid19india.org/states_daily.json'),
+        axios.get('https://api.covid19india.org/zones.json'),
+      ]);
+
+      const [
+        {data},
+        {data: stateDistrictWiseResponse},
+        {data: stateTestData},
+      ] = await Promise.all([
+        axios.get('https://api.jsonbin.io/b/5ec1c0ba50c8594cd4f8b47b/latest'),
+        axios.get('https://api.covid19india.org/state_district_wise.json'),
+        axios.get('https://api.covid19india.org/state_test_data.json'),
+      ]);
+
+      setStates(data.statewise);
+      setDistrictZones(parseDistrictZones(zonesResponse.zones));
+
+      const ts = parseStateTimeseries(statesDailyResponse);
+      ts['TT'] = preprocessTimeseries(data.cases_time_series);
+      // Testing data timeseries
+      const testTs = parseStateTestTimeseries(stateTestData.states_tested_data);
+      testTs['TT'] = parseTotalTestTimeseries(data.tested);
+      // Merge
+      const tsMerged = mergeTimeseries(ts, testTs);
+      setTimeseries(tsMerged);
+
+      setLastUpdated(data.statewise[0].lastupdatedtime);
+
+      const testData = parseStateTestData(stateTestData.states_tested_data);
+      const totalTest = data.tested[data.tested.length - 1];
+      testData['Total'] = {
+        source: totalTest.source,
+        totaltested: totalTest.totalsamplestested,
+        updatedon: totalTest.updatetimestamp.split(' ')[0],
+      };
+      setStateTestData(testData);
+
+      setStateDistrictWiseData(stateDistrictWiseResponse);
+      setFetched(true);
+    } catch (err) {
+      console.log(err);
     }
-  );
-
-  useEffect(() => {
-    const getStates = async () => {
-      try {
-        const [
-          {data: statesDailyResponse},
-          {data: zonesResponse},
-        ] = await Promise.all([
-          axios.get('https://api.covid19india.org/states_daily.json'),
-          axios.get('https://api.covid19india.org/zones.json'),
-        ]);
-
-        const [
-          {data: stateDistrictWiseResponse},
-          {data: stateTestData},
-        ] = await Promise.all([
-          axios.get('https://api.covid19india.org/state_district_wise.json'),
-          axios.get('https://api.covid19india.org/state_test_data.json'),
-        ]);
-
-        setStates(data.statewise);
-        setDistrictZones(parseDistrictZones(zonesResponse.zones));
-
-        const ts = parseStateTimeseries(statesDailyResponse);
-        ts['TT'] = preprocessTimeseries(data.cases_time_series);
-        // Testing data timeseries
-        const testTs = parseStateTestTimeseries(
-          stateTestData.states_tested_data
-        );
-        testTs['TT'] = parseTotalTestTimeseries(data.tested);
-        // Merge
-        const tsMerged = mergeTimeseries(ts, testTs);
-        setTimeseries(tsMerged);
-
-        setLastUpdated(data.statewise[0].lastupdatedtime);
-
-        const testData = parseStateTestData(stateTestData.states_tested_data);
-        const totalTest = data.tested[data.tested.length - 1];
-        testData['Total'] = {
-          source: totalTest.source,
-          totaltested: totalTest.totalsamplestested,
-          updatedon: totalTest.updatetimestamp.split(' ')[0],
-        };
-        setStateTestData(testData);
-
-        setStateDistrictWiseData(stateDistrictWiseResponse);
-        setFetched(true);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (data) {
-      getStates();
-    }
-  }, [data]);
-  console.log(states ? states[0]?.confirmed : '');
+  };
 
   const onHighlightState = useCallback((state) => {
     if (!state) return setRegionHighlighted(null);
