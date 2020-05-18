@@ -40,7 +40,7 @@ if (typeof importScripts === 'function') {
     // Adding networkFirst for all json data. In offline mode will be fetched from cache
     workbox.routing.registerRoute(
       /.*\.json/,
-      new workbox.strategies.NetworkFirst(),
+      new workbox.strategies.NetworkOnly(),
       'GET'
     );
   } else {
