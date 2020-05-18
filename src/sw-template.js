@@ -39,9 +39,9 @@ if (typeof importScripts === 'function') {
 
     // Adding networkFirst for all json data. In offline mode will be fetched from cache
     workbox.routing.registerRoute(
-      /.*\.json/,
+      new RegExp('https://api\\.covid19india\\.org.*/.*\\.json'),
       new workbox.strategies.NetworkOnly(),
-      'POST'
+      'GET'
     );
   } else {
     console.log('Workbox could not be loaded. Hence, no offline support.');
