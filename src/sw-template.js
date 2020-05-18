@@ -41,7 +41,7 @@ if (typeof importScripts === 'function') {
     workbox.routing.registerRoute(
       /.*\.json/,
       new workbox.strategies.NetworkOnly(),
-      'GET'
+      'POST'
     );
   } else {
     console.log('Workbox could not be loaded. Hence, no offline support.');
