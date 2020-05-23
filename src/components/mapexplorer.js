@@ -37,9 +37,14 @@ const isEqual = (prevProps, currProps) => {
     return false;
   }
   let stateName = prevProps.mapName;
-  if (stateName === 'India') stateName = 'Total'
+  if (stateName === 'India') stateName = 'Total';
   const stateCode = STATE_CODES_REVERSE[stateName];
-  if (!equal(prevProps.data[stateCode].last_updated, currProps.data[stateCode].last_updated)) {
+  if (
+    !equal(
+      prevProps.data[stateCode].last_updated,
+      currProps.data[stateCode].last_updated
+    )
+  ) {
     return false;
   }
   return true;
@@ -48,22 +53,24 @@ const isEqual = (prevProps, currProps) => {
 const preProcess = (original) => {
   if (!original)
     return {
-      ...['total', 'delta'].map(ctype => {
+      ...['total', 'delta'].map((ctype) => {
         return {
           [ctype]: {
             active: 0,
             confirmed: 0,
             deceased: 0,
             recovered: 0,
-          }
-        }
-      })
-    }
+          },
+        };
+      }),
+    };
   return produce(original, (draft) => {
-    draft.total.active = draft.total.confirmed - draft.total.recovered - draft.total.deceased;
-    draft.delta.active = draft.delta.confirmed - draft.delta.recovered - draft.delta.deceased;
+    draft.total.active =
+      draft.total.confirmed - draft.total.recovered - draft.total.deceased;
+    draft.delta.active =
+      draft.delta.confirmed - draft.delta.recovered - draft.delta.deceased;
   });
-}
+};
 
 function MapExplorer({
   mapName,
@@ -139,7 +146,10 @@ function MapExplorer({
         const topDistrict = Object.keys(districts)
           .filter((d) => d !== 'Unknown')
           .sort((a, b) => {
-            return districts[b].total[mapStatistic] - districts[a].total[mapStatistic];
+            return (
+              districts[b].total[mapStatistic] -
+              districts[a].total[mapStatistic]
+            );
           })[0];
         ReactDOM.unstable_batchedUpdates(() => {
           setRegionHighlighted({
@@ -175,7 +185,10 @@ function MapExplorer({
   );
 
   const panelState = useMemo(() => {
-    let state = currentMap.view === MAP_VIEWS.STATES ? regionHighlighted.state : currentMap.name;
+    let state =
+      currentMap.view === MAP_VIEWS.STATES
+        ? regionHighlighted.state
+        : currentMap.name;
     if (state === 'India') state = 'Total';
     const stateCode = STATE_CODES_REVERSE[state];
     const stateData = preProcess(data[stateCode]);
@@ -189,22 +202,31 @@ function MapExplorer({
 
   const hoveredRegion = useMemo(() => {
     const stateCode = STATE_CODES_REVERSE[regionHighlighted.state];
-    let hoveredData = preProcess(regionHighlighted.district ? data[stateCode].districts[regionHighlighted.district] : data[stateCode]);
+    let hoveredData = preProcess(
+      regionHighlighted.district
+        ? data[stateCode].districts[regionHighlighted.district]
+        : data[stateCode]
+    );
     if (currentMap.option === MAP_OPTIONS.PER_MILLION) {
       const population = STATE_POPULATIONS[stateCode];
       hoveredData = produce(hoveredData, (draft) => {
-        ['total', 'delta'].forEach(ctype => {
-          MAP_STATISTICS.forEach(statistic => {
+        ['total', 'delta'].forEach((ctype) => {
+          MAP_STATISTICS.forEach((statistic) => {
             draft[ctype][statistic] *= 1e6 / population;
-          })
-        })
+          });
+        });
       });
     }
     return {
       name: regionHighlighted.district || regionHighlighted.state,
       ...hoveredData,
     };
-  }, [data, regionHighlighted.state, regionHighlighted.district, currentMap.option]);
+  }, [
+    data,
+    regionHighlighted.state,
+    regionHighlighted.district,
+    currentMap.option,
+  ]);
 
   const handleTabClick = (option) => {
     switch (option) {
@@ -255,15 +277,19 @@ function MapExplorer({
       default:
         return;
     }
-  }
+  };
 
   return (
     <div
-      className={classnames('MapExplorer', {'stickied': anchor === 'mapexplorer'}, {'hidden': anchor && anchor !== 'mapexplorer'})}
+      className={classnames(
+        'MapExplorer',
+        {stickied: anchor === 'mapexplorer'},
+        {hidden: anchor && anchor !== 'mapexplorer'}
+      )}
     >
       {window.innerWidth > 769 && (
         <div
-          className={classnames('anchor', {'stickied': anchor === 'mapexplorer'})}
+          className={classnames('anchor', {stickied: anchor === 'mapexplorer'})}
           onClick={() => {
             setAnchor(anchor === 'mapexplorer' ? null : 'mapexplorer');
           }}
@@ -289,43 +315,62 @@ function MapExplorer({
       </div>
 
       <div className="map-stats">
-        {MAP_STATISTICS.map((statistic) =>
+        {MAP_STATISTICS.map((statistic) => (
           <div
             key={statistic}
-            className={classnames('stats', statistic, {'focused': statistic === mapStatistic})}
+            className={classnames('stats', statistic, {
+              focused: statistic === mapStatistic,
+            })}
             onClick={() => setMapStatistic(statistic)}
           >
             <h5>{t(capitalize(statistic))}</h5>
             <div className="stats-bottom">
-              <h1>{formatNumber(statistic !== 'tested' ? panelState.total[statistic] : panelState.total.tested.samples)}</h1>
+              <h1>
+                {formatNumber(
+                  statistic !== 'tested'
+                    ? panelState.total[statistic]
+                    : panelState.total.tested.samples
+                )}
+              </h1>
               <h6>
-                  {statistic !== 'tested' && panelState.delta[statistic] > 0 && '+'}
-                  {statistic !== 'tested' && formatNumber(panelState.delta[statistic])}
-                  {statistic === 'tested' && t('As of {{date}}', {date: formatDayMonth(panelState.total.tested.last_updated)})}
+                {statistic !== 'tested' &&
+                  panelState.delta[statistic] > 0 &&
+                  '+'}
+                {statistic !== 'tested' &&
+                  formatNumber(panelState.delta[statistic])}
+                {statistic === 'tested' &&
+                  t('As of {{date}}', {
+                    date: formatDayMonth(panelState.total.tested.last_updated),
+                  })}
               </h6>
             </div>
-            {statistic === 'tested' && <a href={panelState.total.tested.source} target="_noblank">
-              <Icon.Link />
-            </a>}
-            {statistic === 'tested' && panelState.state === 'Total' && testedToolTip}
+            {statistic === 'tested' && (
+              <a href={panelState.total.tested.source} target="_noblank">
+                <Icon.Link />
+              </a>
+            )}
+            {statistic === 'tested' &&
+              panelState.state === 'Total' &&
+              testedToolTip}
           </div>
-        )}
+        ))}
       </div>
 
       <div className="meta">
-        <h2 className={classnames(mapStatistic, hoveredRegion?.zone?.status)} >
-          {t(hoveredRegion.name)}{hoveredRegion.name === 'Unknown' && ` (${t(regionHighlighted.state)})`}
+        <h2 className={classnames(mapStatistic, hoveredRegion?.zone?.status)}>
+          {t(hoveredRegion.name)}
+          {hoveredRegion.name === 'Unknown' &&
+            ` (${t(regionHighlighted.state)})`}
         </h2>
 
-        {currentMapMeta.mapType !== MAP_TYPES.STATE &&
-          panelState.last_updated && (
-            <div className="last-update">
-              <h6>{t('Last updated')}</h6>
-              <h3>
-                {`${formatLastUpdated(panelState.last_updated)} ${t('ago')}`}
-              </h3>
-            </div>
-          )}
+        {currentMapMeta.mapType !== MAP_TYPES.STATE && panelState.last_updated && (
+          <div className="last-update">
+            <h6>{t('Last updated')}</h6>
+            <h3>
+              {`${formatLastUpdated(panelState.last_updated)} ${t('ago')}`}
+            </h3>
+          </div>
+        )}
 
         {currentMapMeta.mapType === MAP_TYPES.STATE && (
           <Link to={`state/${STATE_CODES_REVERSE[currentMap.name]}`}>
@@ -337,17 +382,20 @@ function MapExplorer({
         )}
 
         {currentMap.option !== MAP_OPTIONS.ZONE &&
-        ((currentMap.view === MAP_VIEWS.DISTRICTS && regionHighlighted.district) ||
-        (currentMap.view === MAP_VIEWS.STATES && currentMap.option !== MAP_OPTIONS.TOTAL)) &&
-          <h1 className={classnames('district', mapStatistic)}>
-            {formatNumber(hoveredRegion.total[mapStatistic])}
-            <br />
-            <span>
-              {t(mapStatistic)}
-              {currentMap.option === MAP_OPTIONS.PER_MILLION && ` ${t('per million')}`}
-            </span>
-          </h1>
-        }
+          ((currentMap.view === MAP_VIEWS.DISTRICTS &&
+            regionHighlighted.district) ||
+            (currentMap.view === MAP_VIEWS.STATES &&
+              currentMap.option !== MAP_OPTIONS.TOTAL)) && (
+            <h1 className={classnames('district', mapStatistic)}>
+              {formatNumber(hoveredRegion.total[mapStatistic])}
+              <br />
+              <span>
+                {t(mapStatistic)}
+                {currentMap.option === MAP_OPTIONS.PER_MILLION &&
+                  ` ${t('per million')}`}
+              </span>
+            </h1>
+          )}
 
         {currentMapMeta.mapType === MAP_TYPES.STATE && (
           <div
@@ -374,10 +422,12 @@ function MapExplorer({
       </div>*/}
 
       <div className="tabs-map">
-        {Object.values(MAP_OPTIONS).map((option) =>
+        {Object.values(MAP_OPTIONS).map((option) => (
           <div
             key={option}
-            className={classnames('tab', {'focused':  currentMap.option === option})}
+            className={classnames('tab', {
+              focused: currentMap.option === option,
+            })}
             onClick={() => handleTabClick(option)}
           >
             <h4>
@@ -385,7 +435,7 @@ function MapExplorer({
               {option === MAP_OPTIONS.PER_MILLION && <sup>&dagger;</sup>}
             </h4>
           </div>
-        )}
+        ))}
       </div>
 
       <h6 className={classnames('footnote', 'table-fineprint')}>

@@ -290,10 +290,6 @@ h6 {
 
   svg {
     color: $gray-mid;
-    margin-right: 0.25rem;
-    margin-top: -0.25rem;
-    stroke-width: 2px;
-    width: 36px !important;
   }
 
   .alert-right {
@@ -1945,12 +1941,10 @@ table {
   z-index: 999;
 
   svg {
-    stroke: $gray-mid;
-    stroke-width: 3;
-    width: 16px;
+    color: $gray-mid;
 
     &:hover {
-      stroke: $gray;
+      color: $gray;
     }
   }
 
@@ -1958,7 +1952,7 @@ table {
     transform: rotate(0deg);
 
     svg {
-      stroke: $gray;
+      color: $gray;
     }
   }
 }
@@ -2510,6 +2504,7 @@ table {
 }
 
 .timeseries-header {
+  position: relative;
   align-self: center;
   width: 100%;
 
@@ -2695,7 +2690,7 @@ input {
       }
     }
 
-    &.is-green {
+    &.is-recovered {
       h5 {
         color: $green-mid;
 
@@ -2710,7 +2705,7 @@ input {
       }
     }
 
-    &.is-gray {
+    &.is-deceased {
       h5 {
         color: $gray-mid;
 
@@ -2725,7 +2720,7 @@ input {
       }
     }
 
-    &.is-blue {
+    &.is-active {
       h5 {
         color: $blue-mid;
 
@@ -2740,7 +2735,7 @@ input {
       }
     }
 
-    &.is-purple {
+    &.is-tested {
       h5 {
         color: $purple-mid;
 
@@ -2789,7 +2784,7 @@ input {
       }
     }
 
-    &.is-green {
+    &.is-recovered {
       background: $green-light;
 
       svg {
@@ -2806,7 +2801,7 @@ input {
       }
     }
 
-    &.is-gray {
+    &.is-deceased {
       background: $gray-light;
 
       svg {
@@ -2823,7 +2818,7 @@ input {
       }
     }
 
-    &.is-blue {
+    &.is-active {
       background: $blue-light;
 
       svg {
@@ -2840,7 +2835,7 @@ input {
       }
     }
 
-    &.is-purple {
+    &.is-tested {
       background: $purple-light;
 
       svg {

@@ -4,8 +4,8 @@ import {
   STATE_CODES,
 } from '../constants';
 
-import classnames from 'classnames';
 import Bloodhound from 'corejs-typeahead';
+import produce from 'immer';
 import React, {useState, useCallback, useRef} from 'react';
 import * as Icon from 'react-feather';
 import {useTranslation} from 'react-i18next';
@@ -87,7 +87,7 @@ const locationSuggestions = [
   'Ganjam',
 ];
 
-function Search({districtZones}) {
+function Search() {
   const [searchValue, setSearchValue] = useState('');
   const [expand, setExpand] = useState(false);
   const [results, setResults] = useState([]);
@@ -149,7 +149,11 @@ function Search({districtZones}) {
       if (searchValue) {
         handleSearch(searchValue);
       } else {
-        setResults([]);
+        setResults(
+          produce(results, (draftResults) => {
+            draftResults.splice(0);
+          })
+        );
       }
     },
     100,
@@ -271,13 +275,6 @@ function Search({districtZones}) {
                         {result.type === 'district' &&
                           `, ${STATE_CODES[result.route]}`}
                       </div>
-                      <div
-                        className={classnames('result-zone', {
-                          [`is-${districtZones[STATE_CODES[result.route]][
-                            result.name
-                          ]?.zone.toLowerCase()}`]: true,
-                        })}
-                      ></div>
                     </div>
                     <div className="result-type">
                       <span>{[result.route]}</span>
@@ -372,4 +369,8 @@ function Search({districtZones}) {
   );
 }
 
-export default React.memo(Search);
+const isEqual = () => {
+  return true;
+};
+
+export default React.memo(Search, isEqual);
