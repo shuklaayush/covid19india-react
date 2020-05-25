@@ -4993,7 +4993,7 @@ footer {
   .TimeSeries,
   .Minigraph {
     .stats {
-      &.is-purple {
+      &.is-tested {
         h5 {
           color: #9673b9bb !important;
 
@@ -5010,7 +5010,7 @@ footer {
     }
 
     .svg-parent {
-      &.is-purple {
+      &.is-tested {
         background: #40008050 !important;
 
         svg {
