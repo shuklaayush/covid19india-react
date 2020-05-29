@@ -33,7 +33,7 @@ function MapLegend({data, mapScale, mapOption, statistic}) {
     let {width, height} = dimensions
      || wrapperRef.current.getBoundingClientRect();
 
-    if (!width || !height) ({width, height} = wrapperRef.current.getBoundingClientRect());
+    if (!width || !height) return;
 
     if (mapOption === MAP_OPTIONS.ZONES) {
       svg.call(() =>
@@ -49,7 +49,7 @@ function MapLegend({data, mapScale, mapOption, statistic}) {
         })
       );
     } else if (mapOption === MAP_OPTIONS.HOTSPOTS) {
-      const t = svg.transition().duration(1000);
+      const t = svg.transition().duration(500);
       svg
         .select('.ramp')
         .transition(t)
@@ -152,7 +152,7 @@ function legend({
   ordinalWeights,
 } = {}) {
   svg.selectAll('.circles > *').remove();
-  const t = svg.transition().duration(1000);
+  const t = svg.transition().duration(500);
 
   let tickAdjust = (g) => {
     const ticks = g.selectAll('.tick line');
