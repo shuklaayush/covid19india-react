@@ -6,6 +6,7 @@ import React, {useState, useCallback, useRef} from 'react';
 import * as Icon from 'react-feather';
 import {useTranslation} from 'react-i18next';
 import {Link} from 'react-router-dom';
+import {useTrail, animated, config} from 'react-spring';
 import {useDebounce} from 'react-use';
 
 const engine = new Bloodhound({
@@ -219,12 +220,22 @@ function Search() {
   const targetInput = document.getElementById('search-placeholder');
   if (targetInput) loopThroughSuggestions(targetInput, 0);*/
 
+  const [trail, set] = useTrail(3, () => ({
+    transform: 'translate3d(0, 10px, 0)',
+    opacity: 0,
+    config: config.stiff,
+  }));
+
+  set({transform: 'translate3d(0, 0px, 0)', opacity: 1});
+
   return (
     <div className="Search">
-      <label>{t('Search your city, resources, etc')}</label>
-      <div className="line"></div>
+      <animated.label style={trail[0]}>
+        {t('Search your city, resources, etc')}
+      </animated.label>
+      <animated.div className="line" style={trail[1]}></animated.div>
 
-      <div className="search-input-wrapper">
+      <animated.div className="search-input-wrapper" style={trail[2]}>
         <input
           type="text"
           value={searchValue}
@@ -256,7 +267,7 @@ function Search() {
             <Icon.X />
           </div>
         )}
-      </div>
+      </animated.div>
 
       {results.length > 0 && (
         <div className="results">
