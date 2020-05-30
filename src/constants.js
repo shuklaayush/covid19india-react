@@ -386,3 +386,7 @@ export const INITIAL_DATA = {
     notes: '',
   },
 };
+
+export const NUM_BARS_STATEPAGE = 5;
+
+export const D3_TRANSITION_DURATION = 300;
