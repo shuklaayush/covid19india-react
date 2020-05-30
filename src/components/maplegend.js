@@ -1,6 +1,6 @@
 import {MAP_OPTIONS, ZONE_COLORS} from '../constants';
 import {capitalizeAll, formatNumber} from '../utils/commonfunctions';
-import {useResizeObserver} from '../utils/hooks';
+import {useResizeObserver} from '../hooks/useresizeobserver';
 
 import * as d3 from 'd3';
 import React, {useEffect, useMemo, useRef} from 'react';
@@ -30,8 +30,8 @@ function MapLegend({data, mapScale, mapOption, statistic}) {
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    let {width, height} = dimensions
-     || wrapperRef.current.getBoundingClientRect();
+    let {width, height} =
+      dimensions || wrapperRef.current.getBoundingClientRect();
 
     if (!width || !height) return;
 

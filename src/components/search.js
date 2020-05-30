@@ -1,8 +1,4 @@
-import {
-  STATE_CODES_ARRAY,
-  STATE_CODES_REVERSE,
-  STATE_CODES,
-} from '../constants';
+import {STATE_CODES_ARRAY, STATE_CODES, STATE_NAMES} from '../constants';
 
 import Bloodhound from 'corejs-typeahead';
 import produce from 'immer';
@@ -114,7 +110,7 @@ function Search() {
         const districtObj = {
           name: result.district,
           type: 'district',
-          route: STATE_CODES_REVERSE[result.state],
+          route: STATE_CODES[result.state],
         };
         results.push(districtObj);
         return null;
@@ -273,7 +269,7 @@ function Search() {
                       <div className="result-name">
                         {`${result.name}`}
                         {result.type === 'district' &&
-                          `, ${STATE_CODES[result.route]}`}
+                          `, ${STATE_NAMES[result.route]}`}
                       </div>
                     </div>
                     <div className="result-type">
