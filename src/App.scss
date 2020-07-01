@@ -1804,8 +1804,6 @@ abbr {
 .table {
   align-self: center;
   border-radius: 3px;
-  display: flex;
-  flex-direction: column;
   font-size: 12px;
   margin-bottom: 2.5rem;
   overflow-x: auto;
@@ -1853,6 +1851,11 @@ abbr {
         background: $yellow-hover;
       }
     }
+  }
+
+  .table-wrapper {
+    display: inline-block;
+    min-width: 100%;
   }
 
   .row {
@@ -4365,7 +4368,7 @@ footer {
 @keyframes fadeInUp {
   0% {
     opacity: 0;
-    transform: translateY(0);
+    transform: translateY(20px);
   }
 
   100% {
