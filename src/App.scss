@@ -252,7 +252,7 @@ h6 {
   .home-right {
     display: flex;
     flex-direction: column;
-    width: 30rem;
+    width: 35rem;
   }
 
   .home-left {
@@ -1807,7 +1807,7 @@ abbr {
   font-size: 12px;
   margin-bottom: 2.5rem;
   overflow-x: auto;
-  width: 28rem;
+  width: 33rem;
 
   .state-meta {
     align-items: center;
@@ -1818,7 +1818,7 @@ abbr {
     margin-bottom: 1 + .25rem;
     margin-top: 1rem;
     position: sticky;
-    width: 28rem;
+    width: 33rem;
 
     svg {
       margin-right: .5rem;
@@ -2100,7 +2100,7 @@ abbr {
 .MapExplorer {
   align-self: center;
   position: relative;
-  width: 30rem;
+  width: calc(100% - 2rem);
 
   &.stickied {
     position: sticky !important;
@@ -2635,7 +2635,7 @@ abbr {
   display: flex;
   flex-direction: column;
   margin-top: 3rem;
-  width: 30rem;
+  width: calc(100% - 2rem);
 
   &.stickied {
     position: sticky !important;
@@ -2963,7 +2963,7 @@ input {
     border-radius: 5px;
     display: flex;
     position: relative;
-    width: 30rem;
+    width: 100%;
 
     svg {
       width: 100%;
