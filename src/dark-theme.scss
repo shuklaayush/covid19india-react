@@ -800,13 +800,14 @@ $default-primary: var(--primary-color);
       .row {
         &:nth-child(odd) {
           .cell {
-            background: $gray-light;
+            background: var(--background-color);
           }
         }
 
         &.is-highlighted {
           .cell {
-            background: $gray-hover-opaque !important;
+            background: $gray-opaque !important;
+            color: var(--background-color);
           }
         }
 
@@ -816,7 +817,20 @@ $default-primary: var(--primary-color);
             user-select: none;
 
             &:hover {
-              background: $gray-hover-opaque !important;
+              background: $gray-opaque !important;
+              color: var(--background-color);
+
+              .sort-icon {
+                svg {
+                  fill: var(--background-color);
+                }
+              }
+            }
+
+            .sort-icon {
+              svg {
+                fill: var(--primary-color);
+              }
             }
           }
         }
@@ -826,7 +840,8 @@ $default-primary: var(--primary-color);
           top: 0;
 
           .cell {
-            background: $gray-hover-opaque !important;
+            background: $gray-opaque !important;
+            color: var(--background-color);
           }
         }
 
@@ -834,7 +849,7 @@ $default-primary: var(--primary-color);
           color: $gray;
 
           &:first-child {
-            background: $gray-hover-darker-opaque;
+            background: var(--background-color);
           }
 
           svg {
@@ -902,7 +917,8 @@ $default-primary: var(--primary-color);
             padding: 0.75rem 0.5rem;
 
             &:hover {
-              background: $gray-hover-opaque !important;
+              background: $gray-opaque !important;
+              color: var(--background-color);
             }
           }
 
