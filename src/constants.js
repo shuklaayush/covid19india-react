@@ -150,7 +150,11 @@ export const TABLE_STATISTICS_EXPANDED = Object.keys(
   STATISTIC_DEFINITIONS
 ).filter((statistic) => !['positives', 'testedStates'].includes(statistic));
 
-export const TIMESERIES_STATISTICS = [...PRIMARY_STATISTICS, 'tested'];
+export const TIMESERIES_STATISTICS = [
+  ...TABLE_STATISTICS_EXPANDED.filter(
+    (statistic) => statistic !== 'population'
+  ),
+];
 
 export const UPDATES_COUNT = 5;
 
