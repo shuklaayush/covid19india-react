@@ -1,3 +1,5 @@
+import '../styles/stateMeta.scss';
+
 import StateMetaCard from './StateMetaCard';
 
 import {STATE_NAMES} from '../constants';
@@ -67,7 +69,7 @@ function StateMeta({stateCode, data, timeseries}) {
 
   return (
     <>
-      <div className="StateMeta population">
+      <div className="state-meta population">
         <div className="meta-item population">
           <h3>Population</h3>
           <h1>{formatNumber(data[stateCode]?.meta?.population)}</h1>

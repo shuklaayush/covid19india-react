@@ -1,3 +1,5 @@
+import '../styles/timeseries.scss';
+
 import {
   D3_TRANSITION_DURATION,
   STATISTIC_CONFIGS,
@@ -371,10 +373,11 @@ function Timeseries({timeseries, dates, chartType, isUniform, isLog}) {
 
   return (
     <>
-      <div className="Timeseries">
+      <div className="timeseries">
         {TIMESERIES_STATISTICS.map((statistic, index) => {
           const delta = getStatisticDelta(statistic, index);
           const statisticConfig = STATISTIC_CONFIGS[statistic];
+
           return (
             <div
               key={statistic}
@@ -384,14 +387,15 @@ function Timeseries({timeseries, dates, chartType, isUniform, isLog}) {
             >
               {highlightedDate && (
                 <div className={classnames('stats', `is-${statistic}`)}>
-                  <h5 className="title">
+                  <h6 className="title">
                     {t(capitalize(statisticConfig.displayName))}
-                  </h5>
-                  <h5 className="title">
+                  </h6>
+                  <h6 className="date">
                     {formatDate(highlightedDate, 'dd MMMM')}
-                  </h5>
+                  </h6>
+
                   <div className="stats-bottom">
-                    <h2>
+                    <h3 className="statistic">
                       {formatNumber(
                         getStatistic(
                           timeseries?.[highlightedDate],
@@ -403,8 +407,10 @@ function Timeseries({timeseries, dates, chartType, isUniform, isLog}) {
                           : 'int',
                         statistic
                       )}
-                    </h2>
-                    <h6>{`${delta > 0 ? '+' : ''}${formatNumber(
+                    </h3>
+                    <h6 className="delta">{`${
+                      delta > 0 ? '+' : ''
+                    }${formatNumber(
                       delta,
                       statisticConfig.format !== 'short'
                         ? statisticConfig.format
