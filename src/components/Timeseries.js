@@ -395,7 +395,7 @@ function Timeseries({timeseries, dates, chartType, isUniform, isLog}) {
                   </h6>
 
                   <div className="stats-bottom">
-                    <h3 className="statistic">
+                    <h4 className="statistic">
                       {formatNumber(
                         getStatistic(
                           timeseries?.[highlightedDate],
@@ -407,7 +407,7 @@ function Timeseries({timeseries, dates, chartType, isUniform, isLog}) {
                           : 'int',
                         statistic
                       )}
-                    </h3>
+                    </h4>
                     <h6 className="delta">{`${
                       delta > 0 ? '+' : ''
                     }${formatNumber(
