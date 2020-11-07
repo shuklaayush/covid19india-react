@@ -4,7 +4,7 @@ import useStickySWR from '../hooks/useStickySWR';
 import {fetcher} from '../utils/commonFunctions';
 
 import classnames from 'classnames';
-import React, {useState, useRef, lazy, Suspense} from 'react';
+import {useState, useRef, lazy, Suspense} from 'react';
 import {Helmet} from 'react-helmet';
 import {useLocation} from 'react-router-dom';
 import {useLocalStorage, useSessionStorage, useWindowSize} from 'react-use';
@@ -58,7 +58,7 @@ function Home() {
   const {width} = useWindowSize();
 
   return (
-    <React.Fragment>
+    <>
       <Helmet>
         <title>Coronavirus Outbreak in India - covid19india.org</title>
         <meta
@@ -124,7 +124,7 @@ function Home() {
           ref={homeRightElement}
         >
           {(isVisible || location.hash) && (
-            <React.Fragment>
+            <>
               {data && (
                 <div
                   className={classnames('map-container', {
@@ -161,7 +161,7 @@ function Home() {
                   />
                 </Suspense>
               )}
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>
@@ -171,7 +171,7 @@ function Home() {
           <Footer />
         </Suspense>
       )}
-    </React.Fragment>
+    </>
   );
 }
 
