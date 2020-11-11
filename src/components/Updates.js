@@ -5,7 +5,6 @@ import {capitalize} from '../utils/commonFunctions';
 import {CrossReferenceIcon} from '@primer/octicons-react';
 import {formatDistance, format} from 'date-fns';
 import {Fragment, useLayoutEffect} from 'react';
-import {Send} from 'react-feather';
 
 const newDate = new Date();
 let currentDate = newDate;

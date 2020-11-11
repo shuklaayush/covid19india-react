@@ -151,7 +151,7 @@ function Expand({pages, setExpand, darkMode, windowSize}) {
             <h6>{t('A crowdsourced initiative.')}</h6>
           </div>
         ) : (
-          <a href={`#${darkMode.value ? 'light' : 'dark'}`}>
+          <a onClick={darkMode.toggle}>
             <span>{darkMode.value ? 'Light' : 'Dark'}</span>
           </a>
         )}

@@ -58,7 +58,7 @@ const App = () => {
         />
       </Suspense>
 
-      <Navbar {...{pages}} />
+      <Navbar {...{pages, showLanguageSwitcher, setShowLanguageSwitcher}} />
       <Suspense fallback={<div />}>
         <Switch location={location}>
           {pages.map((page, index) => {
