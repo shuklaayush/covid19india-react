@@ -1,7 +1,6 @@
 import '../styles/timeseriesExplorer.scss';
 
 import TimeseriesLoader from './loaders/Timeseries';
-import StateDropdown from './StateDropdown';
 
 import {
   TIMESERIES_CHART_TYPES,
@@ -148,6 +147,20 @@ function TimeseriesExplorer({
     return pastDates.filter((date) => date >= cutOffDateLower);
   }, [selectedTimeseries, timelineDate, lookback]);
 
+  const handleChange = useCallback(
+    ({target}) => {
+      setRegionHighlighted(JSON.parse(target.value));
+    },
+    [setRegionHighlighted]
+  );
+
+  const resetDropdown = useCallback(() => {
+    setRegionHighlighted({
+      stateCode: stateCode,
+      districtName: null,
+    });
+  }, [stateCode, setRegionHighlighted]);
+
   return (
     <div
       className={classnames(
@@ -217,7 +230,37 @@ function TimeseriesExplorer({
         </div>
       </div>
 
-      <StateDropdown {...{stateCode}} hyperlink={false} />
+      {dropdownRegions && (
+        <div className="state-selection">
+          <div className="dropdown">
+            <select
+              value={JSON.stringify(selectedRegion)}
+              onChange={handleChange}
+            >
+              {dropdownRegions
+                .filter(
+                  (region) =>
+                    STATE_NAMES[region.stateCode] !== region.districtName
+                )
+                .map((region) => {
+                  return (
+                    <option
+                      value={JSON.stringify(region)}
+                      key={`${region.stateCode}-${region.districtName}`}
+                    >
+                      {region.districtName
+                        ? t(region.districtName)
+                        : t(STATE_NAMES[region.stateCode])}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
+          <div className="reset-icon" onClick={resetDropdown}>
+            <ReplyIcon />
+          </div>
+        </div>
+      )}
 
       {isVisible && (
         <Suspense fallback={<TimeseriesLoader />}>
