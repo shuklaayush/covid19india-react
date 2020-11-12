@@ -58,8 +58,8 @@
     "eslint": "eslint .",
     "eslint:fix": "eslint --fix --max-warnings=0 .",
     "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|md|html)\"",
-    "scss-lint": "sass-lint 'src/**/*.scss' -v -f table --max-warnings 0",
-    "scss-lint:fix": "sass-lint-auto-fix 'src/**/*.scss' -d -h -c '.sass-lint-auto-fix.yml'",
+    "stylelint": "stylelint src/**/*.scss -f verbose",
+    "stylelint:fix": "stylelint src/**/*.scss --fix -f verbose",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build:sw": "node ./src/swBuild.js",
     "start:sw": "http-server ./build -c 0",
@@ -82,8 +82,8 @@
       "prettier --write \"**/*.+(json|yml|yaml|md)\""
     ],
     "*.+(css|scss)": [
-      "npm run scss-lint:fix",
-      "npm run scss-lint"
+      "npm run stylelint",
+      "npm run stylelint:fix"
     ]
   },
   "devDependencies": {
@@ -103,9 +103,10 @@
     "rollup": "^2.33.1",
     "rollup-plugin-copy": "^3.3.0",
     "sass": "^1.29.0",
-    "sass-lint": "^1.13.1",
-    "sass-lint-auto-fix": "^0.21.2",
-    "workbox-build": "^5.1.4"
+    "workbox-build": "^5.1.4",
+    "stylelint": "^13.3.3",
+    "stylelint-config-sass-guidelines": "^7.0.0",
+    "stylelint-config-standard": "^20.0.0"
   },
   "browserslist": {
     "production": [
