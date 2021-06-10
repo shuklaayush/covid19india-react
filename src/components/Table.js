@@ -10,7 +10,7 @@ import {
   STATE_NAMES,
   STATISTIC_CONFIGS,
   TABLE_STATISTICS,
-  TABLE_STATISTICS_ALL,
+  TABLE_STATISTICS_EXPANDED,
   UNASSIGNED_STATE_CODE,
 } from '../constants';
 import {getStatistic, retry} from '../utils/commonFunctions';
@@ -219,7 +219,7 @@ function Table({
   });
 
   const tableStatistics = (
-    expandTable ? TABLE_STATISTICS_ALL : TABLE_STATISTICS
+    expandTable ? TABLE_STATISTICS_EXPANDED : TABLE_STATISTICS
   ).filter(
     (statistic) =>
       (tableOption === 'States' ||

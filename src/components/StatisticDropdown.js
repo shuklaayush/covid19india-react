@@ -1,4 +1,4 @@
-import {TABLE_STATISTICS_ALL, STATISTIC_CONFIGS} from '../constants';
+import {TABLE_STATISTICS_EXPANDED, STATISTIC_CONFIGS} from '../constants';
 import {capitalize} from '../utils/commonFunctions';
 
 import equal from 'fast-deep-equal';
@@ -24,7 +24,7 @@ const StatisticDropdown = ({
   const currentStatisticConfig = STATISTIC_CONFIGS[currentStatistic];
 
   const statistics = useMemo(() => {
-    const filteredStatistics = TABLE_STATISTICS_ALL.filter(
+    const filteredStatistics = TABLE_STATISTICS_EXPANDED.filter(
       (statistic) =>
         (!isDistrictView ||
           STATISTIC_CONFIGS[statistic]?.category !== 'tested' ||

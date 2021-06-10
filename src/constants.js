@@ -159,9 +159,11 @@ export const PRIMARY_STATISTICS = [
 
 export const LEVEL_STATISTICS = [...PRIMARY_STATISTICS];
 
+export const LEVEL_STATISTICS_EXPANDED = [...PRIMARY_STATISTICS, 'tpr'];
+
 export const TABLE_STATISTICS = [...PRIMARY_STATISTICS, 'tested', 'vaccinated'];
 
-export const TABLE_STATISTICS_ALL = Object.keys(STATISTIC_CONFIGS).filter(
+export const TABLE_STATISTICS_EXPANDED = Object.keys(STATISTIC_CONFIGS).filter(
   (statistic) => !STATISTIC_CONFIGS[statistic]?.tableConfig?.hide
 );
 

@@ -26,7 +26,7 @@ function PureLevelItem({statistic, total, delta}) {
     <>
       <h5>{t(capitalize(statisticConfig.displayName))}</h5>
       <animated.h4>
-        {statistic !== 'active' ? (
+        {statisticConfig?.showDelta ? (
           delta > 0 ? (
             /* Add space after + because react-spring regex bug */
             spring.delta.to(
@@ -63,23 +63,23 @@ function PureLevelItem({statistic, total, delta}) {
 
 const LevelItem = memo(PureLevelItem);
 
-function Level({data}) {
+function Level({data, levelStatistics = LEVEL_STATISTICS}) {
   const trail = useMemo(() => {
     const styles = [];
 
-    LEVEL_STATISTICS.map((statistic, index) => {
+    levelStatistics.map((statistic, index) => {
       styles.push({
         animationDelay: `${750 + index * 250}ms`,
-        width: `calc(${100 / LEVEL_STATISTICS.length}%)`,
+        width: `calc(${100 / levelStatistics.length}%)`,
       });
       return null;
     });
     return styles;
-  }, []);
+  }, [levelStatistics]);
 
   return (
     <div className="Level">
-      {LEVEL_STATISTICS.map((statistic, index) => (
+      {levelStatistics.map((statistic, index) => (
         <animated.div
           key={index}
           className={classnames('level-item', `is-${statistic}`, 'fadeInUp')}
@@ -98,6 +98,8 @@ function Level({data}) {
 
 const isEqual = (prevProps, currProps) => {
   if (!equal(prevProps.data, currProps.data)) {
+    return false;
+  } else if (!equal(prevProps.levelStatistics, currProps.levelStatistics)) {
     return false;
   }
   return true;

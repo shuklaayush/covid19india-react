@@ -4,6 +4,8 @@ import {
   DATA_API_ROOT,
   DISTRICT_START_DATE,
   DISTRICT_TEST_END_DATE,
+  LEVEL_STATISTICS,
+  LEVEL_STATISTICS_EXPANDED,
   MAP_VIEWS,
   TESTED_EXPIRING_DAYS,
 } from '../constants';
@@ -107,6 +109,9 @@ function Home() {
     );
   }, [data, date]);
 
+  const levelStatistics =
+    expandTable && width >= 769 ? LEVEL_STATISTICS_EXPANDED : LEVEL_STATISTICS;
+
   return (
     <>
       <Helmet>
@@ -146,9 +151,11 @@ function Home() {
             {data && (
               <Suspense fallback={<div style={{height: '50rem'}} />}>
                 {width >= 769 && !expandTable && (
-                  <MapSwitcher {...{mapStatistic, setMapStatistic}} />
+                  <MapSwitcher
+                    {...{mapStatistic, setMapStatistic, levelStatistics}}
+                  />
                 )}
-                <Level data={data['TT']} />
+                <Level data={data['TT']} {...{levelStatistics}} />
               </Suspense>
             )}
 
@@ -158,7 +165,7 @@ function Home() {
                 <Suspense fallback={<div style={{height: '107px'}} />}>
                   <Minigraphs
                     timeseries={timeseries['TT']?.dates}
-                    {...{date}}
+                    {...{date, levelStatistics}}
                   />
                 </Suspense>
               )}

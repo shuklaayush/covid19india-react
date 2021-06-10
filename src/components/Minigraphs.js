@@ -26,7 +26,11 @@ const margin = {top: 10, right: 10, bottom: 2, left: 10};
 const height = 75;
 const maxWidth = 120;
 
-function Minigraphs({timeseries, date: timelineDate}) {
+function Minigraphs({
+  timeseries,
+  date: timelineDate,
+  levelStatistics = LEVEL_STATISTICS,
+}) {
   const refs = useRef([]);
   const endDate = timelineDate || getIndiaDateYesterdayISO();
 
@@ -62,9 +66,9 @@ function Minigraphs({timeseries, date: timelineDate}) {
       ])
       .range([margin.left, chartRight]);
 
-    refs.current.forEach((ref, index) => {
+    refs.current.slice(0, levelStatistics.length).forEach((ref, index) => {
       const svg = select(ref);
-      const statistic = LEVEL_STATISTICS[index];
+      const statistic = levelStatistics[index];
       const color = STATISTIC_CONFIGS[statistic].color;
 
       const dailyMaxAbs = max(dates, (date) =>
@@ -156,16 +160,16 @@ function Minigraphs({timeseries, date: timelineDate}) {
               .selection()
         );
     });
-  }, [endDate, dates, timeseries, width]);
+  }, [endDate, dates, timeseries, width, levelStatistics]);
 
   return (
     <div className="Minigraph">
-      {LEVEL_STATISTICS.map((statistic, index) => (
+      {levelStatistics.map((statistic, index) => (
         <div
           key={statistic}
           className={classnames('svg-parent')}
           ref={index === 0 ? wrapperRef : null}
-          style={{width: `calc(${100 / LEVEL_STATISTICS.length}%)`}}
+          style={{width: `calc(${100 / levelStatistics.length}%)`}}
         >
           <svg
             ref={(el) => {
@@ -191,6 +195,8 @@ const isEqual = (prevProps, currProps) => {
   } else if (!equal(currProps.stateCode, prevProps.stateCode)) {
     return false;
   } else if (!equal(currProps.date, prevProps.date)) {
+    return false;
+  } else if (!equal(currProps.levelStatistics, prevProps.levelStatistics)) {
     return false;
   }
   return true;
